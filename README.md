@@ -1,6 +1,6 @@
 # RustyWaterCasm
 
-A simple set of routines in form of a small library written in C/C++ to make a quite realistic water rendering with drops and blobs
+A  set of routines in form of a small library written in C/C++ to make a quite realistic water rendering with drops and blobs
 
 The source code is published under the GNU GENERAL PUBLIC LICENSE Version 3. See LICENSE file.
 
