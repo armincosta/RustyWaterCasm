@@ -9,8 +9,7 @@ by SEE Solutions.
 
 A preview and download of RustyLiquid V1.0 is available from the SEE Solutions website at:
 
-http://www.seesolutions.it/lang_en/index_download.html
+http://www.seesolutions.it
 
-Author: Armin Costa
-e-mail: armincosta@hotmail.com
+Author: A.Costa
 
