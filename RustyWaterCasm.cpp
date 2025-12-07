@@ -1,4 +1,4 @@
-/** RustyWaterCasm.dll
+/** RustyWaterCasm.cpp
 
    This library can be used freely to render water effects efficiently
 
@@ -22,14 +22,8 @@
 # You should have received a copy of the GNU General Public License version 3
 */
 
-
-
-
 #include "stdafx.h"
 #include "RustyWaterCasm.h"
-
-
-
 
 char *buffer;  // image buffer
 char *buf;
@@ -41,7 +35,7 @@ int width = 256;
 int height = 256;
 int water_size = 256*256;
 char *me = { "################################################################################ \n RWaterCasm.dll -- copyright(c) 2003-2008 \n  Author: Armin Costa \n e-mail: armincosta@rustyliquid.com \n \n A library coded in C++ and Asm to render Water-Effects in Java(tm) \n ########################################################################\n" };
-int lum = 2; // to calculate water-reflaction --> spectrum
+int lum = 2; // luminance to calculate water-reflaction --> spectrum
 
 
 
@@ -62,24 +56,19 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 }
 
 
-// This is an example of an exported variable
 RUSTYWATERCASM_API int nRustyWaterCasm=0;
 
-// This is an example of an exported function.
 RUSTYWATERCASM_API int fnRustyWaterCasm(void)
 {
 	return 42;
 }
 
-// This is the constructor of a class that has been exported.
-// see RustyWaterCasm.h for the class definition
 CRustyWaterCasm::CRustyWaterCasm()
 { 
 	return; 
 }
 
 RUSTYWATERCASM_API void filterMap(int w, int h){
-
      int y;
      int x;
      
@@ -93,22 +82,18 @@ RUSTYWATERCASM_API void filterMap(int w, int h){
 				+ w_old[tmp - w]
 				+ w_old[tmp + 1]
 				+ w_old[tmp - 1]
-				+ w_old[tmp - w - 1]  // 4 pixel-map would be sufficiend
+				+ w_old[tmp - w - 1]  // 4 pixel-map are mostly sufficient
 				+ w_old[tmp + w - 1]
 				+ w_old[tmp - w + 1]
 				+ w_old[tmp + w + 1]
 				) >> 2 )
 				- w_new[tmp];
 
-              
-
 				w_new[tmp] = newh - (newh >> 3);
-
        }
 
      }
 
-     
      tmp_ = w_old;
      w_old = w_new;
 
@@ -117,22 +102,21 @@ RUSTYWATERCASM_API void filterMap(int w, int h){
  }
 
 RUSTYWATERCASM_API void genTexture(){
-	     int w = width;
-		 int h = height;
-		 int bs = water_size;
+	    int w = width;
+		int h = height;
+		int bs = water_size;
 
-         int tmp=0;
-         int t_ver = 0;
+        int tmp=0;
+        int t_ver = 0;
     
-          int tm = 0;
-          int tmp3 = 0;
+        int tm = 0;
+        int tmp3 = 0;
 
-          int y;
-          int x;
-		  int lum = 2;
+        int y;
+        int x;
+		int lum = 2;
 		for(y=0; y<(h-1); y++) {
 			for(x=0; x<(w-1); x++) {
-							
 				// calculate the 'slope' for the current pixel
 				int dx = w_old[tmp] - w_old[tmp+1]; //x
 				int dy = w_old[tmp] - w_old[tmp+w];  //y
@@ -146,50 +130,37 @@ RUSTYWATERCASM_API void genTexture(){
 				ox = ox >= w ? (w-1) : (ox < 0 ? 0 : ox);
 				oy = oy >= h ? (h-1) : (oy < 0 ? 0 : oy);
 
-                 int color = (int)buffer[ox + oy * w];
+                int color = (int)buffer[ox + oy * w];
 
-
-			        int r = (color & 0xff0000) >> 16;
-			        int g = (color & 0xff00)>> 8;
-			        int b = (color & 0xff);
+			    int r = (color & 0xff0000) >> 16;
+			    int g = (color & 0xff00)>> 8;
+			    int b = (color & 0xff);
 			        
-			        r = controlCol(r + shading);
+			    r = controlCol(r + shading);
 				g = controlCol(g + shading);
 				b = controlCol(b + shading);
 
-                  int tmpX;
-                  int tmpY;
-                  int tmp2; 
+                int tmpX;
+                int tmpY;
+                int tmp2;
 
+                tmp2 = tmp;
 
-                    tmp2 = tmp;
+                if((tmp2 >= bs)||(tmp2 <= 0)){
+                    // prevent array index out of bounds
 
-
-                   if((tmp2 >= bs)||(tmp2 <= 0)){
-                                                             // prevent array index out of bounds
-
-                   }else{
-
-
-
-					        int col = 0xff000000 | (r << 16) | (g << 8) | b;//paint pixel at offset tmp2
-						//	img1->putPixel(x, y, col);
-
-
-
-
-                   }
-								
+                }else{
+                	int col = 0xff000000 | (r << 16) | (g << 8) | b;//paint pixel at offset tmp2
+                	//	in your implementation you can than do something like img1->putPixel(x, y, col);
+                }
 				// increment one pixel
 				tmp++;
 				t_ver++;
 			}
 			tmp++;
-		        t_ver++;
-
+		    t_ver++;
 		}
-		//draw(*img1);
-
+		//in your implementation you can than do something like draw(*img1);
 }
 
 int controlCol(int c) {
@@ -241,6 +212,4 @@ RUSTYWATERCASM_API void addBlob(int x, int y, int rad, int depth) {
 			}
 
 		}
-
-	}
-
+}
