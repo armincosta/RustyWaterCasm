@@ -1,5 +1,5 @@
 
-/** RustyWaterCasm.dll
+/** RustyWaterCasm.h
 
    This library can be used freely to render water effects efficiently
 
